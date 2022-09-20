@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import prisma from "../../prisma";
 
 export default async function deleteUser(user: User) {
@@ -18,9 +18,18 @@ export default async function deleteUser(user: User) {
   await deleteUserAccessTokens(user);
   await deleteUserGrants(user);
 
-  await prisma.user.delete({
-    where: { id: user.id }
-  });
+  try {
+    await prisma.user.delete({
+      where: { id: user.id }
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2014") {
+        console.log(error.message);
+        throw error;
+      }
+    }
+  }
 }
 
 async function checkForms(user: User): Promise<string[]> {
