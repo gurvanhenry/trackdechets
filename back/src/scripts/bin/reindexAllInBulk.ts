@@ -31,12 +31,16 @@ async function exitScript() {
 }
 
 (async function () {
+  logger.info("Start script");
   const force = process.argv.includes("--force") || process.argv.includes("-f");
   try {
     // launch job by chunks in the queue only if argument is specified
     const useQueue = process.argv.includes("--useQueue");
+    logger.info("Use queue ?", useQueue);
     if (useQueue) {
+      logger.info("addReindexAllInBulkJob");
       await addReindexAllInBulkJob(force);
+      logger.info("exitScript");
       await exitScript();
       return;
     }
