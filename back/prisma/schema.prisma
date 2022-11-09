@@ -671,6 +671,7 @@ model User {
   id                    String                  @id @default(cuid())
   email                 String                  @unique
   password              String
+  passwordVersion       Int
   name                  String?
   phone                 String?
   createdAt             DateTime                @default(now()) @db.Timestamptz(6)
@@ -1033,7 +1034,7 @@ model Bsff {
   transporterRecepisseDepartment    String?
   transporterRecepisseValidityLimit DateTime? @db.Timestamptz(6)
 
-  transporterTransportMode            TransportMode?   @default(ROAD)
+  transporterTransportMode            TransportMode? @default(ROAD)
   transporterTransportPlates          String[]
   transporterTransportTakenOverAt     DateTime?      @db.Timestamptz(6)
   transporterTransportSignatureAuthor String?

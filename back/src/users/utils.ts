@@ -3,16 +3,64 @@ import crypto from "crypto";
 import * as yup from "yup";
 import { base32Encode } from "../utils";
 import { EMAIL_PROVIDER_DOMAINS } from "../common/constants/emailProviderDomain";
+import { UserInputError } from "apollo-server-express";
 
 const saltRound = 10;
-const minimalPasswordLength = 8; // update frontend validation if this value is edited
+const minimalPasswordLength = 10; // update frontend validation if this value is edited
+const maximalPasswordLength = 64; // prevent dos attack with insanely long passwords
+const minimalPasswordEntropy = 5; // ensure there is at least 8 different characters in password
+export const passwordVersion = 2; // 11/2022
 
 export function isPasswordLongEnough(password: string): boolean {
   return password.length >= minimalPasswordLength;
 }
 
+export function isPasswordShortEnough(password: string): boolean {
+  return password.length <= maximalPasswordLength;
+}
+
+export function hasPasswordEnoughEntropy(password: string): boolean {
+  const charCount = new Set(password).size;
+  return charCount >= minimalPasswordEntropy;
+}
+
 export function hashPassword(password: string) {
   return hash(password, saltRound);
+}
+
+/**
+ * Check password meets our criteria
+ * - min length
+ * - max length
+ * - entropy
+ * @param trimmedPassword
+ */
+export function checkPasswordCriteria(trimmedPassword: string) {
+  const passwordLength = trimmedPassword.length;
+  if (!isPasswordLongEnough(trimmedPassword)) {
+    throw new UserInputError(
+      `Le nouveau mot de passe est trop court: (${passwordLength} caractères, minimum ${minimalPasswordLength} caractères)`,
+      {
+        invalidArgs: ["newPassword"]
+      }
+    );
+  }
+  if (!isPasswordShortEnough(trimmedPassword)) {
+    throw new UserInputError(
+      `Le nouveau mot de passe est trop long.(${passwordLength} caractères, maximum ${maximalPasswordLength} caractères)`,
+      {
+        invalidArgs: ["newPassword"]
+      }
+    );
+  }
+  if (!hasPasswordEnoughEntropy(trimmedPassword)) {
+    throw new UserInputError(
+      `Le nouveau mot de passe est trop simple, veuillez introduire plus de variété dans les caractères choisis. (Au moins ${minimalPasswordEntropy} caractères différents)`,
+      {
+        invalidArgs: ["newPassword"]
+      }
+    );
+  }
 }
 
 /**
