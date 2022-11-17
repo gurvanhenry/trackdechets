@@ -1,4 +1,7 @@
-import { Prisma, User } from "@prisma/client";
+import { User } from "@prisma/client";
+import { PrismaTransaction } from "../../common/repository/types";
+import { PRISMA_TRANSACTION_TIMEOUT } from "../../common/repository/helper";
+import logger from "../../logging/logger";
 import prisma from "../../prisma";
 
 export default async function deleteUser(user: User) {
@@ -13,22 +16,23 @@ export default async function deleteUser(user: User) {
     throw new Error(errors.join("\n"));
   }
 
-  await deleteUserCompanyAssociations(user);
-  await deleteUserActivationHashes(user);
-  await deleteUserAccessTokens(user);
-  await deleteUserGrants(user);
-
   try {
-    await prisma.user.delete({
-      where: { id: user.id }
-    });
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2014") {
-        console.log(error.message);
-        throw error;
-      }
-    }
+    await prisma.$transaction(
+      async transaction => {
+        await deleteUserCompanyAssociations(user, transaction);
+        await deleteUserActivationHashes(user, transaction);
+        await deleteUserAccessTokens(user, transaction);
+        await deleteUserGrants(user, transaction);
+
+        await prisma.user.delete({
+          where: { id: user.id }
+        });
+      },
+      { timeout: PRISMA_TRANSACTION_TIMEOUT }
+    );
+  } catch (err) {
+    logger.error(`Error during deleteUser transaction`, err);
+    throw err;
   }
 }
 
@@ -107,7 +111,10 @@ async function checkCompanyAssociations(user: User): Promise<string[]> {
   return errors;
 }
 
-async function deleteUserCompanyAssociations(user: User) {
+async function deleteUserCompanyAssociations(
+  user: User,
+  prisma: PrismaTransaction
+) {
   await prisma.companyAssociation.deleteMany({
     where: {
       user: {
@@ -133,7 +140,10 @@ async function checkApplications(user: User): Promise<string[]> {
   return errors;
 }
 
-async function deleteUserActivationHashes(user: User) {
+async function deleteUserActivationHashes(
+  user: User,
+  prisma: PrismaTransaction
+) {
   await prisma.userActivationHash.deleteMany({
     where: {
       user: {
@@ -143,7 +153,7 @@ async function deleteUserActivationHashes(user: User) {
   });
 }
 
-async function deleteUserAccessTokens(user: User) {
+async function deleteUserAccessTokens(user: User, prisma: PrismaTransaction) {
   await prisma.accessToken.deleteMany({
     where: {
       user: {
@@ -153,7 +163,7 @@ async function deleteUserAccessTokens(user: User) {
   });
 }
 
-async function deleteUserGrants(user: User) {
+async function deleteUserGrants(user: User, prisma: PrismaTransaction) {
   await prisma.grant.deleteMany({
     where: {
       user: {
