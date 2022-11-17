@@ -1,28 +1,35 @@
 import prisma from "../../../prisma";
 import { MutationResolvers } from "../../../generated/graphql/types";
-import { checkIsAuthenticated } from "../../../common/permissions";
+import { checkIsAdmin } from "../../../common/permissions";
 import { applyAuthStrategies, AuthType } from "../../../auth";
 import deleteUser from "../../../scripts/prisma/deleteUser";
+import { UserInputError } from "apollo-server-core";
 
 /**
  * Edit user profile
  * @param userId
  */
-export async function deleteUserFn(userId: string) {
+export async function deleteUserFn(userId: string): Promise<boolean> {
   const user = await prisma.user.findUnique({ where: { id: userId } });
-  await deleteUser(user);
+  if (!user) {
+    throw new UserInputError(`Utilisateur ${userId} introuvable`);
+  }
+  try {
+    await deleteUser(user);
+    return true;
+  } catch (err) {
+    throw new UserInputError(`Impossible de supprimer cet utilisateur: ${err}`);
+  }
 }
 
 const deleteUserResolver: MutationResolvers["deleteUser"] = (
-  parent,
-  args,
+  _,
+  { id: userId },
   context
 ) => {
   applyAuthStrategies(context, [AuthType.Session]);
-
-  const user = checkIsAuthenticated(context);
-
-  return deleteUserFn(user.id);
+  checkIsAdmin(context);
+  return deleteUserFn(userId);
 };
 
 export default deleteUserResolver;
