@@ -40,7 +40,9 @@ function DeleteUser() {
           <Form>
             <div className="form__row">
               <label>
-                ID de l'utilisateur à supprimer
+                ID de l'utilisateur à supprimer (
+                <b class="tw-bg-orange-500">Attention: action irréversible !</b>
+                )
                 <Field
                   name="id"
                   placeholder="qsdfg12345azerty"

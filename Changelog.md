@@ -5,6 +5,22 @@ Les changements importants de Trackdéchets sont documentés dans ce fichier.
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 et le projet suit un schéma de versionning inspiré de [Calendar Versioning](https://calver.org/).
 
+# [2022.12.1] 12/12/2022
+
+#### :rocket: Nouvelles fonctionnalités
+
+- Ajout d'un formulaire réservé aux administrateurs pour désactiver un compte utilisateur et l'anonymiser définitivement [PR 1867](https://github.com/MTES-MCT/trackdechets/pull/1867)
+
+#### :bug: Corrections de bugs
+
+#### :boom: Breaking changes
+
+#### :nail_care: Améliorations
+
+#### :memo: Documentation
+
+#### :house: Interne
+
 # [2022.11.1] 21/11/2022
 
 #### :rocket: Nouvelles fonctionnalités
@@ -49,6 +65,7 @@ et le projet suit un schéma de versionning inspiré de [Calendar Versioning](ht
 - Utilisation de react pour la génération du pdf des bsvhus [PR1788](https://github.com/MTES-MCT/trackdechets/pull/1788).
 - Utilisation du pattern repository pour le bsvhu, indexation asynchrone et écriture d'events [PR 1767](https://github.com/MTES-MCT/trackdechets/pull/1767).
 - Migration du stockage des évènements vers une base de données externe [PR 1646](https://github.com/MTES-MCT/trackdechets/pull/1646).
+
 
 # [2022.10.3] 31/10/2022
 
