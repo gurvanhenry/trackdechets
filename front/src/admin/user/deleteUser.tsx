@@ -27,11 +27,14 @@ function DeleteUser() {
           const res = await deleteUser({ variables: { id: values.id } });
           resetForm();
           !!res?.data?.deleteUser
-            ? cogoToast.success(`Suppression définitive effectuée`, {
-                hideAfter: 3,
-              })
+            ? cogoToast.success(
+                `Suppression définitive effectuée, notez l'email anonymisé si besoin immédiatement car il sera impossible de le récupérer : ${res?.data?.deleteUser}\nNe divulguez cet email anonymisé à personne !`,
+                {
+                  hideAfter: 60,
+                }
+              )
             : cogoToast.error(
-                `Cet utilisateur ne peut pas être supprimé, soit il n'existe pas, soit il doit être lié à des bordereaux ou des établissements existants en base de données, tentez de supprimer les établissements s'ils sont orphelins et réessayer la suppression s'il vous plaît.`,
+                `Cet utilisateur ne peut pas être supprimé, soit il n'existe pas, soit il doit être lié à des application ou des établissements existants en base de données, tentez de les supprimer si possible et réessayer de supprimer s'il vous plaît.`,
                 { hideAfter: 3 }
               );
         }}
@@ -42,7 +45,8 @@ function DeleteUser() {
               <label>
                 ID de l'utilisateur à supprimer (
                 <b className="tw-bg-orange-500">
-                  Attention: action irréversible !
+                  Attention: action irreversible ! L'utilisateur sera anonymisé
+                  définitivement
                 </b>
                 )
                 <Field

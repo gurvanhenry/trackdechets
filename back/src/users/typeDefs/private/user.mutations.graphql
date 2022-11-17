@@ -110,6 +110,6 @@ type Mutation {
   USAGE INTERNE
   Tente de supprimer un utilisateur (hard-delete)
   """
-  deleteUser(id: ID!): Boolean!
+  deleteUser(id: ID!): String!
 
 }
