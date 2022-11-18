@@ -13,11 +13,12 @@ import {
 } from "../../users/resolvers/mutations/deleteUser";
 
 /**
- * WARINING : this is irreversible
+ * WARNING : this is irreversible
  */
 export default async function deleteUser(user: User) {
   const errors = [
     ...(await checkForms(user)),
+    ...(await checkStatusLogs(user)),
     ...(await checkCompanyAssociations(user)),
     ...(await checkApplications(user))
   ];
@@ -59,6 +60,24 @@ async function checkForms(user: User): Promise<string[]> {
   if (forms.length > 0) {
     return [
       `Impossible de supprimer cet utilisateur car il est propriétaire de ${forms.length} BSDs.`
+    ];
+  }
+
+  return [];
+}
+
+async function checkStatusLogs(user: User): Promise<string[]> {
+  const statusLogs = await prisma.statusLog.findMany({
+    where: {
+      user: {
+        id: user.id
+      }
+    }
+  });
+
+  if (statusLogs.length > 0) {
+    return [
+      `Impossible de supprimer cet utilisateur car il est propriétaire de ${statusLogs.length} status logs.`
     ];
   }
 

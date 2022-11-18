@@ -15,7 +15,7 @@ import deleteUser from "../prisma/hardDeleteUser";
         `Il est par exemple impossible de supprimer un utilisateur qui est seul administrateur d'une entreprise.`,
         ``,
         `Exemple :`,
-        `node ./src/scripts/bin/mergeUsersAndDelete.js 1234`
+        `node ./src/scripts/bin/hardDeleteUser.js 1234`
       ].join("\n")
     );
     return;
