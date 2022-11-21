@@ -2,7 +2,7 @@ import * as Prisma from "@prisma/client";
 import { nullIfNoValues, safeInput, processDate } from "../common/converter";
 import * as GraphQL from "../generated/graphql/types";
 import { BsdElastic } from "../common/elastic";
-import { BsffPackaging } from "@prisma/client";
+import { BsffPackaging, BsffPackagingType } from "@prisma/client";
 
 export function flattenBsffInput(
   bsffInput: GraphQL.BsffInput
@@ -209,7 +209,12 @@ export function expandBsffPackagingFromDB(
     id: prismaBsffPackaging.id,
     bsffId: prismaBsffPackaging.bsffId,
     numero: prismaBsffPackaging.numero,
-    name: prismaBsffPackaging.name,
+    type: prismaBsffPackaging.type,
+    other: prismaBsffPackaging.other,
+    name:
+      prismaBsffPackaging.type === BsffPackagingType.OTHER
+        ? prismaBsffPackaging.other
+        : prismaBsffPackaging.type,
     volume: prismaBsffPackaging.volume,
     weight: prismaBsffPackaging.weight,
     acceptation: nullIfNoValues<GraphQL.BsffPackagingAcceptation>({
