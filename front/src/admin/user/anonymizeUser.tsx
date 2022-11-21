@@ -7,13 +7,13 @@ import { InlineError } from "common/components/Error";
 import RedErrorMessage from "common/components/RedErrorMessage";
 
 const DELETE_USER = gql`
-  mutation deleteUser($id: ID!) {
-    deleteUser(id: $id)
+  mutation anonymizeUser($id: ID!) {
+    anonymizeUser(id: $id)
   }
 `;
-function DeleteUser() {
-  const [deleteUser, { loading, error }] =
-    useMutation<Pick<Mutation, "deleteUser">, MutationDeleteUserArgs>(
+function AnonymizeUser() {
+  const [anonymizeUser, { loading, error }] =
+    useMutation<Pick<Mutation, "anonymizeUser">, MutationDeleteUserArgs>(
       DELETE_USER
     );
 
@@ -24,11 +24,11 @@ function DeleteUser() {
           id: "",
         }}
         onSubmit={async (values, { resetForm }) => {
-          const res = await deleteUser({ variables: { id: values.id } });
+          const res = await anonymizeUser({ variables: { id: values.id } });
           resetForm();
-          !!res?.data?.deleteUser
+          !!res?.data?.anonymizeUser
             ? cogoToast.success(
-                `Suppression effectuée, notez l'email anonymisé si besoin immédiatement car il sera impossible de le récupérer : ${res?.data?.deleteUser}\nNe divulguez cet email à personne !`,
+                `Suppression effectuée, notez l'email anonymisé si besoin immédiatement car il sera impossible de le récupérer : ${res?.data?.anonymizeUser}\nNe divulguez cet email à personne !`,
                 {
                   hideAfter: 60,
                 }
@@ -75,4 +75,4 @@ function DeleteUser() {
   );
 }
 
-export default DeleteUser;
+export default AnonymizeUser;

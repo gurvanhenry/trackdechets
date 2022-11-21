@@ -4,7 +4,7 @@ import React from "react";
 import { NavLink, Switch, Route, Redirect } from "react-router-dom";
 import { CreateAnonymousCompany } from "./anonymousCompany";
 import Reindex from "./reindex/Reindex";
-import DeleteUser from "./user/deleteUser";
+import AnonymizeUser from "./user/anonymizeUser";
 import CompaniesVerification from "./verification/CompaniesVerification";
 
 /**
@@ -68,7 +68,7 @@ export default function Admin() {
             <Reindex />
           </Route>
           <Route exact path={routes.admin.user}>
-            <DeleteUser />
+            <AnonymizeUser />
           </Route>
           <Redirect to={routes.admin.verification} />
         </Switch>
