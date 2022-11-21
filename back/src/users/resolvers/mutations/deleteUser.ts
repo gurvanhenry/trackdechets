@@ -7,6 +7,7 @@ import { applyAuthStrategies, AuthType } from "../../../auth";
 import { UserInputError } from "apollo-server-core";
 import { PRISMA_TRANSACTION_TIMEOUT } from "../../../common/repository/helper";
 import { PrismaTransaction } from "../../../common/repository/types";
+import { hashPassword } from "../../utils";
 
 export async function checkCompanyAssociations(user: User): Promise<string[]> {
   const errors = [];
@@ -160,7 +161,8 @@ async function deleteUserFn(userId: string): Promise<string> {
             email: anonEmail,
             name: uuid,
             isActive: false,
-            phone: "00000000"
+            phone: "00000000",
+            password: await hashPassword(nanoid())
           }
         });
       },
