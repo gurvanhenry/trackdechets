@@ -108,8 +108,8 @@ type Mutation {
 
   """
   USAGE INTERNE
-  Tente de supprimer un utilisateur (hard-delete)
+  Tente de désactiver un compte utilisateur (soft-delete et anonymisation)
   """
-  deleteUser(id: ID!): String!
+  anonymizeUser(id: ID!): String!
 
 }

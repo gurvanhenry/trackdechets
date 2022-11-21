@@ -129,7 +129,7 @@ export async function deleteUserGrants(user: User, prisma: PrismaTransaction) {
  * Soft-delete by anonymizing a User
  * @param userId
  */
-async function deleteUserFn(userId: string): Promise<string> {
+async function anonymizeUserFn(userId: string): Promise<string> {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) {
     throw new UserInputError(`Utilisateur ${userId} introuvable`);
@@ -175,14 +175,14 @@ async function deleteUserFn(userId: string): Promise<string> {
   }
 }
 
-const deleteUserResolver: MutationResolvers["deleteUser"] = (
+const anonymizeUserResolver: MutationResolvers["anonymizeUser"] = (
   _,
   { id: userId },
   context
 ) => {
   applyAuthStrategies(context, [AuthType.Session]);
   checkIsAdmin(context);
-  return deleteUserFn(userId);
+  return anonymizeUserFn(userId);
 };
 
-export default deleteUserResolver;
+export default anonymizeUserResolver;

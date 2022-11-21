@@ -8,7 +8,7 @@ import {
   deleteUserActivationHashes,
   deleteUserCompanyAssociations,
   deleteUserGrants
-} from "../../users/resolvers/mutations/deleteUser";
+} from "../../users/resolvers/mutations/anonymizeUser";
 
 /**
  * WARNING : this is irreversible
