@@ -64,12 +64,8 @@ et le projet suit un schéma de versionning inspiré de [Calendar Versioning](ht
 
 - Utilisation de react pour la génération du pdf des bsvhus [PR1788](https://github.com/MTES-MCT/trackdechets/pull/1788).
 - Utilisation du pattern repository pour le bsvhu, indexation asynchrone et écriture d'events [PR 1767](https://github.com/MTES-MCT/trackdechets/pull/1767).
-<<<<<<< HEAD
 - Migration du stockage des évènements vers une base de données externe [PR 1646](https://github.com/MTES-MCT/trackdechets/pull/1646).
 
-=======
-- Ajout d'un formulaire réservé aux administrateurs pour supprimer par anonymisation un utilisateur [PR 1867](https://github.com/MTES-MCT/trackdechets/pull/1867)
->>>>>>> ba4f48cd7 (Update Changelog.md)
 
 # [2022.10.3] 31/10/2022
 
