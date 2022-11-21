@@ -28,7 +28,7 @@ function DeleteUser() {
           resetForm();
           !!res?.data?.deleteUser
             ? cogoToast.success(
-                `Suppression définitive effectuée, notez l'email anonymisé si besoin immédiatement car il sera impossible de le récupérer : ${res?.data?.deleteUser}\nNe divulguez cet email anonymisé à personne !`,
+                `Suppression effectuée, notez l'email anonymisé si besoin immédiatement car il sera impossible de le récupérer : ${res?.data?.deleteUser}\nNe divulguez cet email à personne !`,
                 {
                   hideAfter: 60,
                 }
@@ -43,10 +43,10 @@ function DeleteUser() {
           <Form>
             <div className="form__row">
               <label>
-                ID de l'utilisateur à supprimer (
+                Identifiant (de base de données) du compte à anonymiser et désactiver définitivement (
                 <b className="tw-bg-orange-500">
                   Attention: action irreversible ! L'utilisateur sera anonymisé
-                  définitivement
+                  et son compte définitivement désactivé.
                 </b>
                 )
                 <Field
@@ -63,7 +63,9 @@ function DeleteUser() {
               className="btn btn--primary tw-mt-1"
               disabled={loading}
             >
-              {loading ? "Suppression..." : "Supprimer"}
+              {loading
+                ? "Désactivation en cours..."
+                : "Désactiver et anonymiser"}
             </button>
           </Form>
         )}
