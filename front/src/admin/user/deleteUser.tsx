@@ -43,7 +43,8 @@ function DeleteUser() {
           <Form>
             <div className="form__row">
               <label>
-                Identifiant (de base de données) du compte à anonymiser et désactiver définitivement (
+                Identifiant (de base de données) du compte à anonymiser et
+                désactiver définitivement (
                 <b className="tw-bg-orange-500">
                   Attention: action irreversible ! L'utilisateur sera anonymisé
                   et son compte définitivement désactivé.

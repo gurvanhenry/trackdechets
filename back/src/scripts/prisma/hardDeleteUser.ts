@@ -1,6 +1,4 @@
 import { User } from "@prisma/client";
-import { PRISMA_TRANSACTION_TIMEOUT } from "../../common/repository/helper";
-import logger from "../../logging/logger";
 import prisma from "../../prisma";
 import {
   checkCompanyAssociations,
@@ -27,25 +25,15 @@ export default async function deleteUser(user: User) {
     throw new Error(errors.join("\n"));
   }
 
-  try {
-    await prisma.$transaction(
-      async transaction => {
-        await deleteUserCompanyAssociations(user, transaction);
-        await deleteUserActivationHashes(user, transaction);
-        await deleteUserAccessTokens(user, transaction);
-        await deleteUserGrants(user, transaction);
-        await deleteMembershipRequest(user, transaction);
+  await deleteUserCompanyAssociations(user, prisma);
+  await deleteUserActivationHashes(user, prisma);
+  await deleteUserAccessTokens(user, prisma);
+  await deleteUserGrants(user, prisma);
+  await deleteMembershipRequest(user, prisma);
 
-        await prisma.user.delete({
-          where: { id: user.id }
-        });
-      },
-      { timeout: PRISMA_TRANSACTION_TIMEOUT }
-    );
-  } catch (err) {
-    logger.error(`Error during deleteUser transaction`, err);
-    throw err;
-  }
+  await prisma.user.delete({
+    where: { id: user.id }
+  });
 }
 
 async function checkForms(user: User): Promise<string[]> {
