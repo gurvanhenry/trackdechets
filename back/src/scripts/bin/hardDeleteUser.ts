@@ -1,4 +1,5 @@
 #!/usr/bin/env ts-node
+import prompts from "prompts";
 import prisma from "../../prisma";
 import deleteUser from "../prisma/hardDeleteUser";
 
@@ -29,6 +30,11 @@ import deleteUser from "../prisma/hardDeleteUser";
     );
     return;
   }
-
+  await prompts({
+    type: "confirm",
+    name: "force",
+    message: `Can you confirm to hard delete this user id=${user.id} email=${user.email}?`,
+    initial: false
+  });
   await deleteUser(user);
 })();
