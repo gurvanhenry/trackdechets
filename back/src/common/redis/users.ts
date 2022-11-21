@@ -61,3 +61,23 @@ export async function getCachedUserSiretOrVat(
   await setCachedUserCompanyId(userId, cleanIds);
   return cleanIds;
 }
+
+const userToDisconnectHashMap =
+  process.env.USER_TO_DISCONNECT || `user-to-disconnect`;
+
+export async function setUserToDisconnect(userId: string): Promise<boolean> {
+  const result = await redisClient.hsetnx(
+    userToDisconnectHashMap,
+    userId,
+    Date.now()
+  );
+  return !!result;
+}
+
+export async function getUserToDisconnect(userId: string): Promise<boolean> {
+  const exists = await redisClient.hexists(userToDisconnectHashMap, userId);
+  if (!!exists) {
+    await redisClient.hdel(userToDisconnectHashMap, userId);
+  }
+  return !!exists;
+}

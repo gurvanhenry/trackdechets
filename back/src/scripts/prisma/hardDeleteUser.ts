@@ -1,4 +1,5 @@
 import { User } from "@prisma/client";
+import { setUserToDisconnect } from "../../common/redis/users";
 import prisma from "../../prisma";
 import {
   checkCompanyAssociations,
@@ -31,6 +32,7 @@ export default async function deleteUser(user: User) {
   await deleteUserGrants(user, prisma);
   await deleteMembershipRequest(user, prisma);
 
+  await setUserToDisconnect(user.id);
   await prisma.user.delete({
     where: { id: user.id }
   });

@@ -8,6 +8,7 @@ import { UserInputError } from "apollo-server-core";
 import { PRISMA_TRANSACTION_TIMEOUT } from "../../../common/repository/helper";
 import { PrismaTransaction } from "../../../common/repository/types";
 import { hashPassword } from "../../utils";
+import { setUserToDisconnect } from "../../../common/redis/users";
 
 export async function checkCompanyAssociations(user: User): Promise<string[]> {
   const errors = [];
@@ -165,6 +166,7 @@ async function anonymizeUserFn(userId: string): Promise<string> {
             password: await hashPassword(nanoid())
           }
         });
+        await setUserToDisconnect(user.id);
       },
       { timeout: PRISMA_TRANSACTION_TIMEOUT }
     );
